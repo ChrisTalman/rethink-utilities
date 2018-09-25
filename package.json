@@ -1,0 +1,25 @@
+{
+	"name": "@bluecewe/rethink-utilities",
+	"description": "A collection of RethinkDB utilities.",
+	"version": "0.1.0",
+	"repository": {
+		"type": "git",
+		"url": "https://bitbucket.org/Bluecewe/rethink-utilities.git"
+	},
+	"license": "UNLICENSED",
+	"scripts": {
+		"build": ".\\node_modules\\.bin\\webpack"
+	},
+	"devDependencies": {
+		"@bluecewe/empty-promise": "git+https://bitbucket.org/Bluecewe/empty-promise.git",
+		"@types/node": "^10.11.0",
+		"ts-loader": "^5.2.0",
+		"typescript": "^3.0.3",
+		"webpack": "^4.20.0",
+		"webpack-cli": "^3.1.1",
+		"webpack-node-externals": "^1.7.2"
+	},
+	"dependencies": {
+		"rethinkdbdash": "^2.3.31"
+	}
+}

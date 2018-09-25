@@ -1,0 +1,19 @@
+{
+    "compilerOptions":
+    {
+        "target": "es2015",
+        "module": "ES6",
+        "moduleResolution": "node",
+        "baseUrl": "./",
+		"lib":
+		[
+			"es2015",
+			"es2017"
+		],
+        "removeComments": true,
+        "downlevelIteration": true,
+        "alwaysStrict": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": true
+    }
+}
