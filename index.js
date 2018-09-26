@@ -136,11 +136,11 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-/*! exports provided: Instance, throwResultError */
+/*! exports provided: default, throwResultError */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Instance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Instance */ \"./src/Instance.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"Instance\", function() { return _Instance__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThrowResultError */ \"./src/ThrowResultError.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"throwResultError\", function() { return _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Instance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Instance */ \"./src/Instance.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return _Instance__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThrowResultError */ \"./src/ThrowResultError.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"throwResultError\", function() { return _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/index.ts?");
 
 /***/ }),
 
