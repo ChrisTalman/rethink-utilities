@@ -26,14 +26,14 @@ const WRITE_COMMANDS =
 export default async function({query, options}: {query, options?: Options})
 {
 	const instance: Instance = this;
-	parseOptions(options);
+	options = parseOptions(options);
 	validateQuery({query, instance});
 	for (let attemptNumber = 0; attemptNumber < (MAX_ATTEMPTS + 1); attemptNumber++)
 	{
 		let output: any;
 		try
 		{
-			output = await attempt(query, options);
+			output = await attempt({query, options});
 		}
 		catch (error)
 		{
@@ -53,7 +53,7 @@ export default async function({query, options}: {query, options?: Options})
 	};
 };
 
-async function attempt(query, options: Options)
+async function attempt({query, options}: {query, options: Options})
 {
 	const output = await query.run(options.rethink);
 	return output;
@@ -101,6 +101,7 @@ function parseOptions(options: Options = {})
 	{
 		options.throwResultError = true;
 	};
+	return options;
 };
 
 function handleResultError(output, options: Options, query)
