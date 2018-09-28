@@ -25,6 +25,10 @@ const WRITE_COMMANDS =
 
 export default async function({query, options}: {query, options?: Options})
 {
+	if (typeof query !== 'function')
+	{
+		throw new RethinkRunError('\'query\' parameter must be function.');
+	};
 	const instance: Instance = this;
 	options = parseOptions(options);
 	validateQuery({query, instance});
