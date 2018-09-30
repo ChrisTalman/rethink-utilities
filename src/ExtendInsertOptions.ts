@@ -6,9 +6,9 @@ import Instance from './Instance';
 // Types
 export interface ParsableOptions
 {
-	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutHelper;
+	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutOldHelper;
 };
-export interface WithoutHelper
+export interface WithoutOldHelper
 {
 	withoutOld: Array<string>;
 };
@@ -29,6 +29,7 @@ export default function parse(options: ParsableOptions)
 	{
 		const helper = options.conflict;
 		options.conflict = (id, oldDocument, newDocument) => oldDocument.without(instance.RethinkDB.args(helper.withoutOld)).merge(newDocument);
+		return options;
 	}
 	else
 	{

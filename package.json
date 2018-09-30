@@ -1,7 +1,7 @@
 {
 	"name": "@bluecewe/rethink-utilities",
 	"description": "A collection of RethinkDB utilities.",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"repository": {
 		"type": "git",
 		"url": "https://bitbucket.org/Bluecewe/rethink-utilities.git"
