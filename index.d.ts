@@ -5,6 +5,7 @@ declare module '@bluecewe/rethink-utilities'
     	public RethinkDB;
     	constructor({RethinkDB}: {RethinkDB});
     	public run({query, options}: {query, options?: RunOptions});
+    	public parseExtendedInsertOptions(options: ExtendInsertOptions.ParsableOptions): ExtendInsertOptions.ParsedOptions;
     }
     export interface RunOptions
     {
@@ -26,5 +27,21 @@ declare module '@bluecewe/rethink-utilities'
         		[field: string]: Variant | boolean;
         	}
         }
+    }
+    export namespace ExtendInsertOptions
+    {
+        export interface ParsableOptions
+        {
+        	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutHelper;
+        }
+        export interface WithoutHelper
+        {
+        	withoutOld: Array<string>;
+        }
+        export interface ParsedOptions
+        {
+        	conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
+        }
+        export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
     }
 }

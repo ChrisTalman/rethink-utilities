@@ -2,6 +2,7 @@
 
 // Internal Modules
 import { default as run } from './Run';
+import { default as parseExtendedInsertOptions } from './ExtendInsertOptions';
 
 export default class
 {
@@ -11,4 +12,5 @@ export default class
 		this.RethinkDB = RethinkDB;
 	};
 	public run = run;
+	public parseExtendedInsertOptions = parseExtendedInsertOptions;
 };
