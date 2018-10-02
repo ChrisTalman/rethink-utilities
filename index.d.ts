@@ -6,6 +6,8 @@ declare module '@bluecewe/rethink-utilities'
     	constructor({RethinkDB}: {RethinkDB});
     	public run({query, options}: {query, options?: RunOptions});
     	public parseExtendedInsertOptions(options: ExtendInsertOptions.ParsableOptions): ExtendInsertOptions.ParsedOptions;
+		/** Generates RethinkDB query which creates a dictionary of keys from the given array using the given ID key, with every value set as boolean true. */
+		public emptyDictionaryFromArray <GenericArray extends Array<object>, GenericId extends keyof GenericArray[0]> (array: GenericArray, id: GenericId): any;
     }
     export interface RunOptions
     {

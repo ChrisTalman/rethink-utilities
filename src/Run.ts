@@ -3,9 +3,10 @@
 // Interal Modules
 import EmptyPromise from '@bluecewe/empty-promise';
 import throwResultError from './ThrowResultError';
-import Instance from './Instance';
+import getInstance from 'src/Utilities/GetInstance';
 
 // Types
+import Instance from 'src/Instance';
 export interface Options
 {
 	throwResultError?: boolean;
@@ -29,11 +30,7 @@ export default async function({query, options}: {query, options?: Options})
 	{
 		throw new RethinkRunError('\'query\' parameter must be function.');
 	};
-	const instance: Instance = this;
-	if (!(instance instanceof Instance))
-	{
-		throw new RethinkRunError('\'this\' must be Instance class.');
-	};
+	const instance = getInstance(this);
 	options = parseOptions(options);
 	validateQuery({query, instance});
 	for (let attemptNumber = 0; attemptNumber < (MAX_ATTEMPTS + 1); attemptNumber++)
