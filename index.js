@@ -132,6 +132,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/Pluck.ts":
+/*!**********************!*\
+  !*** ./src/Pluck.ts ***!
+  \**********************/
+/*! exports provided: Pluck, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Pluck\", function() { return Pluck; });\n\r\n;\r\nvar Pluck;\r\n(function (Pluck) {\r\n    ;\r\n    ;\r\n})(Pluck || (Pluck = {}));\r\n;\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (function ({ rows, pluck }) {\r\n    const rowsList = Array.isArray(rows) ? rows : [rows];\r\n    const pluckedRows = [];\r\n    for (let row of rowsList) {\r\n        const pluckedRow = {};\r\n        pluckFields(pluck, row, pluckedRow);\r\n        pluckedRows.push(pluckedRow);\r\n    }\r\n    ;\r\n    const output = Array.isArray(rows) ? pluckedRows : pluckedRows[0];\r\n    return output;\r\n});\r\n;\r\nfunction pluckFields(pluck, document, pluckedDocument) {\r\n    const pluckList = Array.isArray(pluck) ? pluck : Object.keys(pluck).map(key => ({ [key]: pluck[key] }));\r\n    for (let field of pluckList) {\r\n        if (typeof field === 'string' && document.hasOwnProperty(field)) {\r\n            pluckedDocument[field] = document[field];\r\n        }\r\n        else if (typeof field === 'object') {\r\n            const subFieldKeys = Object.keys(field);\r\n            for (let subFieldKey of subFieldKeys) {\r\n                if (!document.hasOwnProperty(subFieldKey)) {\r\n                    continue;\r\n                }\r\n                ;\r\n                const subDocument = document[subFieldKey];\r\n                const pluckedSubdocument = {};\r\n                const subField = field[subFieldKey];\r\n                if (typeof subField === 'boolean') {\r\n                    pluckedSubdocument[subFieldKey] = document[subFieldKey];\r\n                }\r\n                else {\r\n                    pluckFields(subField, subDocument, pluckedSubdocument);\r\n                }\r\n                ;\r\n                const somePlucked = Object.keys(pluckedSubdocument).length > 0;\r\n                if (somePlucked) {\r\n                    pluckedDocument[subFieldKey] = pluckedSubdocument;\r\n                }\r\n                ;\r\n            }\r\n            ;\r\n        }\r\n        ;\r\n    }\r\n    ;\r\n}\r\n;\r\n\n\n//# sourceURL=webpack:///./src/Pluck.ts?");
+
+/***/ }),
+
 /***/ "./src/Run.ts":
 /*!********************!*\
   !*** ./src/Run.ts ***!
@@ -172,11 +184,11 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var src_
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-/*! exports provided: default, throwResultError */
+/*! exports provided: default, throwResultError, pluck */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Instance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Instance */ \"./src/Instance.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return _Instance__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThrowResultError */ \"./src/ThrowResultError.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"throwResultError\", function() { return _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Instance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Instance */ \"./src/Instance.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return _Instance__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThrowResultError */ \"./src/ThrowResultError.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"throwResultError\", function() { return _ThrowResultError__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n/* harmony import */ var _Pluck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pluck */ \"./src/Pluck.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"pluck\", function() { return _Pluck__WEBPACK_IMPORTED_MODULE_2__[\"default\"]; });\n\n\r\n\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/index.ts?");
 
 /***/ }),
 
