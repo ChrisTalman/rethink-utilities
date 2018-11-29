@@ -5,6 +5,7 @@ const NodeExternals = require('webpack-node-externals');
 
 // Constants
 const IGNORE = /(?:node_modules)$/;
+const NODE_EXTERNALS_WHITELIST = [/^@bluecewe\/[\w-]+/];
 
 module.exports =
 {
@@ -44,6 +45,6 @@ module.exports =
     },
 	externals:
 	[
-		NodeExternals()
+		NodeExternals({whitelist: NODE_EXTERNALS_WHITELIST})
 	]
 };
