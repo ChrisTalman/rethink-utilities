@@ -11,6 +11,7 @@
 		"build": "./node_modules/.bin/webpack"
 	},
 	"devDependencies": {
+		"@bluecewe/empty-promise": "git+https://bitbucket.org/Bluecewe/empty-promise.git",
 		"@types/node": "^10.11.0",
 		"ts-loader": "^5.2.0",
 		"typescript": "^3.0.3",
@@ -19,7 +20,6 @@
 		"webpack-node-externals": "^1.7.2"
 	},
 	"dependencies": {
-		"rethinkdbdash": "^2.3.31",
-		"@bluecewe/empty-promise": "git+https://bitbucket.org/Bluecewe/empty-promise.git"
+		"rethinkdbdash": "^2.3.31"
 	}
 }
