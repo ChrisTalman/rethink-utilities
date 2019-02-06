@@ -21,6 +21,7 @@ declare module '@bluecewe/rethink-utilities'
     	/** Options passed to RethinkDB run(). */
     	runOptions?: RunOptions;
     }
+    export class ReqlRuntimeWriteError extends Error {}
     /** Conducts RethinkDB-style pluck on array of objects. */
     export function pluck({rows, pluck}: {rows: PluckTypes.RowsVariant, pluck: PluckTypes.Pluck.Variant}): object;
     export namespace PluckTypes
