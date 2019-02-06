@@ -1,10 +1,7 @@
 'use strict';
 
-// Instance
-export { default } from './Instance';
-
-// Throw Result Error
-export { default as throwResultError } from './ThrowResultError';
-
-// Pluck
-export { default as pluck} from './Pluck';
+// Methods
+export { default as run} from 'src/Modules/Run';
+export { default as pluck} from 'src/Modules/Pluck';
+export { default as emptyDictionaryFromArray } from 'src/Modules/EmptyDictionaryFromArray';
+export { default as extendInsertOptions} from 'src/Modules/ExtendInsertOptions';

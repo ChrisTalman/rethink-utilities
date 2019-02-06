@@ -1,19 +1,27 @@
+/// <types="rethinkdb-ts">
+
+// Types
+import { RQuery, Connection, RunOptions } from 'rethinkdb-ts';
+type ReturnType <T> = T extends (...args: any[]) => infer R ? R : any;
+type PromiseValue <T> = T extends Promise<infer V> ? V : never;
+
 declare module '@bluecewe/rethink-utilities'
 {
-    export default class
+    /** Runs query and returns result if successful, otherwise reattempts several times until throwing an exception with the final error. */
+    export function run <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: RunUtilityOptions}): PromiseValue<ReturnType<GenericQuery['run']>>;
+    export interface RunUtilityOptions
     {
-    	public RethinkDB;
-    	constructor({RethinkDB}: {RethinkDB});
-    	public run({query, options}: {query, options?: RunOptions});
-    	public parseExtendedInsertOptions(options: ExtendInsertOptions.ParsableOptions): ExtendInsertOptions.ParsedOptions;
-		/** Generates RethinkDB query which creates a dictionary of keys from the given array using the given ID key, with every value set as boolean true. */
-		public emptyDictionaryFromArray <GenericArray extends Array<object>, GenericId extends keyof GenericArray[0]> (array: GenericArray, id: GenericId): any;
+        /**
+    		Determines whether runtime errors are detected and thrown.
+    		'Runtime errors' can occur with write operations like insert(), and can be found in the write operation result object.
+    	*/
+    	throwRuntime: boolean;
+    	/** RethinkDB connection. */
+    	connection?: Connection;
+    	/** Options passed to RethinkDB run(). */
+    	runOptions?: RunOptions;
     }
-    export interface RunOptions
-    {
-        throwResultError?: boolean;
-    	rethink?: object;
-    }
+    /** Conducts RethinkDB-style pluck on array of objects. */
     export function pluck({rows, pluck}: {rows: PluckTypes.RowsVariant, pluck: PluckTypes.Pluck.Variant}): object;
     export namespace PluckTypes
     {
