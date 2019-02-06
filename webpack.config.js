@@ -14,11 +14,7 @@ module.exports =
     entry: './src/index.ts',
     resolve:
     {
-        extensions:
-        [
-            '.ts',
-            '.json'
-        ],
+        extensions: [ '.js', '.ts' ],
         alias:
         {
             src: __dirname + '/src',
