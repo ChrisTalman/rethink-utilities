@@ -1,7 +1,7 @@
 /// <types="rethinkdb-ts">
 
 // Types
-import { RQuery, Connection, RunOptions } from 'rethinkdb-ts';
+import { RQuery, RDatum, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
 type ReturnType <T> = T extends (...args: any[]) => infer R ? R : any;
 type PromiseValue <T> = T extends Promise<infer V> ? V : never;
 
@@ -21,7 +21,12 @@ declare module '@bluecewe/rethink-utilities'
     	/** Options passed to RethinkDB run(). */
     	runOptions?: RunOptions;
     }
-    export class ReqlRuntimeWriteError extends Error {}
+    export class ReqlRuntimeWriteError extends Error
+    {
+        public readonly result: MinimalWriteResult;
+        constructor(result: MinimalWriteResult);
+    }
+    export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {}
     /** Conducts RethinkDB-style pluck on array of objects. */
     export function pluck({rows, pluck}: {rows: PluckTypes.RowsVariant, pluck: PluckTypes.Pluck.Variant}): object;
     export namespace PluckTypes
@@ -39,20 +44,21 @@ declare module '@bluecewe/rethink-utilities'
         	}
         }
     }
-    export namespace ExtendInsertOptions
+    /** Parses extended insert options, returning them in an ordinary insert options form. */
+    export default function extendInsertOptions(options: ParsableOptions): ParsedOptions;
+    export interface ParsableOptions
     {
-        export interface ParsableOptions
-        {
-        	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutHelper;
-        }
-        export interface WithoutHelper
-        {
-        	withoutOld: Array<string>;
-        }
-        export interface ParsedOptions
-        {
-        	conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
-        }
-        export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
+    	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutOldHelper;
     }
+    export interface WithoutOldHelper
+    {
+    	withoutOld: Array<string>;
+    }
+    export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
+    export interface ParsedOptions
+    {
+    	conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
+    }
+    /** Generates RethinkDB query which creates a dictionary of keys from the given array using the given ID key, with every value set as boolean true. */
+    export function emptyDictionaryFromArray <GenericArray extends Array<object>, GenericId extends keyof GenericArray[0]> (array: GenericArray, id: GenericId): RDatum;
 }

@@ -4,7 +4,7 @@
 import delay from 'src/Modules/Utilities/Delay';
 
 // Types
-import { RQuery, Connection, RunOptions } from 'rethinkdb-ts';
+import { RQuery, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
 type ReturnType <T> = T extends (...args: any[]) => infer R ? R : any;
 type PromiseValue <T> = T extends Promise<infer V> ? V : never;
 export interface Options
@@ -19,6 +19,7 @@ export interface Options
 	/** Options passed to RethinkDB run(). */
 	runOptions?: RunOptions;
 };
+export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {};
 
 // Constants
 const DELAY_DURATIONS = [200, 600, 1800, 3000];
@@ -79,7 +80,7 @@ function throwReqlRuntimeWriteError(result: any)
 	}
 	else if (typeof result === 'object' && result !== null)
 	{
-		if (typeof result.errors === 'number' && result.errors > 0 && typeof result.first_error === 'string') throw new ReqlRuntimeWriteError(result.first_error);
+		if (typeof result.errors === 'number' && result.errors > 0 && typeof result.first_error === 'string') throw new ReqlRuntimeWriteError(result);
 		const keys = Object.keys(result);
 		for (let key of keys)
 		{
@@ -91,8 +92,10 @@ function throwReqlRuntimeWriteError(result: any)
 
 export class ReqlRuntimeWriteError extends Error
 {
-	constructor(message: string)
+	public readonly result: MinimalWriteResult;
+	constructor(result: MinimalWriteResult)
 	{
-		super(message);
+		super(result.first_error);
+		this.result = result;
 	};
 };
