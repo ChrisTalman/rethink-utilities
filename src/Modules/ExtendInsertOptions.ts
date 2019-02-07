@@ -9,12 +9,13 @@ export interface WithoutOldHelper
 {
 	withoutOld: Array<string>;
 };
+export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
 export interface ParsedOptions
 {
 	conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
 };
-export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
 
+/** Parses extended insert options, returning them in an ordinary insert options form. */
 export default function parse(options: ParsableOptions)
 {
 	if ('conflict' in options && typeof options.conflict === 'object' && options.conflict !== null && 'withoutOld' in options.conflict)
