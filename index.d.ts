@@ -45,7 +45,7 @@ declare module '@bluecewe/rethink-utilities'
         }
     }
     /** Parses extended insert options, returning them in an ordinary insert options form. */
-    export default function extendInsertOptions(options: ParsableOptions): ParsedOptions;
+    export function extendInsertOptions(options: ParsableOptions): ParsedOptions;
     export interface ParsableOptions
     {
     	conflict?: 'error' | 'replace' | 'update' | ConflictCallback | WithoutOldHelper;
