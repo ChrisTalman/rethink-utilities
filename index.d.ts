@@ -54,7 +54,7 @@ declare module '@bluecewe/rethink-utilities'
     {
     	withoutOld: Array<string>;
     }
-    export type ConflictCallback = (id: string, oldDocument: any, newDocument: any) => boolean;
+    export type ConflictCallback = (id: RDatum<string>, oldDocument: RDatum, newDocument: RDatum) => boolean;
     export interface ParsedOptions
     {
     	conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
