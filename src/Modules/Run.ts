@@ -53,6 +53,7 @@ export default async function <GenericQuery extends RQuery> ({query, options}: {
 			continue;
 		};
 		success = true;
+		break;
 	};
 	if (!success) throw lastError;
 	if (options.throwRuntime) throwReqlRuntimeWriteError(result);
