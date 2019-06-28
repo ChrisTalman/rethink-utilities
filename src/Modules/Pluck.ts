@@ -4,18 +4,15 @@
 export type RowsVariant = Rows | Row;
 export interface Rows extends Array<Row> {};
 export type Row = object;
-export namespace Pluck
+export type Pluck = string | ArrayPluck | ObjectPluck;
+interface ArrayPluck extends Array<Pluck> {}
+interface ObjectPluck
 {
-	export type Variant = List | Object;
-    export interface List extends Array<string | Object> {};
-	export interface Object
-	{
-		[field: string]: Variant | boolean;
-	};
-};
+    [key: string]: string | true | ArrayPluck | ObjectPluck;
+}
 
 /** Conducts RethinkDB-style pluck on array of objects. */
-export default function({rows, pluck}: {rows: RowsVariant, pluck: Pluck.Variant})
+export default function({rows, pluck}: {rows: RowsVariant, pluck: Pluck})
 {
 	const rowsList = Array.isArray(rows) ? rows : [rows];
     const pluckedRows: Rows = [];
@@ -29,7 +26,7 @@ export default function({rows, pluck}: {rows: RowsVariant, pluck: Pluck.Variant}
 	return output;
 };
 
-function pluckFields(pluck: Pluck.Variant, document: object, pluckedDocument: object)
+function pluckFields(pluck: Pluck, document: object, pluckedDocument: object)
 {
     const pluckList = Array.isArray(pluck) ? pluck : Object.keys(pluck).map(key => ({[key]: pluck[key]}));
     for (let field of pluckList)

@@ -28,21 +28,15 @@ declare module '@bluecewe/rethink-utilities'
     }
     export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {}
     /** Conducts RethinkDB-style pluck on array of objects. */
-    export function pluck({rows, pluck}: {rows: PluckTypes.RowsVariant, pluck: PluckTypes.Pluck.Variant}): object;
-    export namespace PluckTypes
+    export function pluck({rows, pluck}: {rows: PluckRowsVariant, pluck: Pluck}): object;
+    export type PluckRowsVariant = PluckRows | PluckRow;
+    export interface PluckRows extends Array<PluckRow> {}
+    export type PluckRow = object;
+    export type Pluck = string | ArrayPluck | ObjectPluck;
+    interface ArrayPluck extends Array<Pluck> {}
+    interface ObjectPluck
     {
-        export type RowsVariant = Rows | Row;
-        export interface Rows extends Array<Row> {}
-        export type Row = object;
-        export namespace Pluck
-        {
-        	export type Variant = List | Object;
-            export interface List extends Array<string | Object> {}
-        	export interface Object
-        	{
-        		[field: string]: Variant | boolean;
-        	}
-        }
+    	[key: string]: string | true | ArrayPluck | ObjectPluck;
     }
     /** Parses extended insert options, returning them in an ordinary insert options form. */
     export function extendInsertOptions(options: ParsableOptions): ParsedOptions;
