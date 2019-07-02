@@ -33,10 +33,14 @@ declare module '@bluecewe/rethink-utilities'
 	export interface PluckRows extends Array<PluckRow> {}
 	export type PluckRow = object;
 	export type Pluck = string | ArrayPluck | ObjectPluck;
-	interface ArrayPluck extends Array<Pluck> {}
-	interface ObjectPluck
+	export interface ArrayPluck extends Array<Pluck> {}
+	export interface ObjectPluck
 	{
 		[key: string]: string | true | ArrayPluck | ObjectPluck;
+	}
+	export interface PureObjectPluck
+	{
+		[key: string]: true | PureObjectPluck;
 	}
 	/** Parses extended insert options, returning them in an ordinary insert options form. */
 	export function extendInsertOptions(options: ParsableOptions): ParsedOptions;
