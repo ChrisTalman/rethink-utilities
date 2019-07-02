@@ -5,8 +5,8 @@ export type RowsVariant = Rows | Row;
 export interface Rows extends Array<Row> {};
 export type Row = object;
 export type Pluck = string | ArrayPluck | ObjectPluck;
-interface ArrayPluck extends Array<Pluck> {}
-interface ObjectPluck
+export interface ArrayPluck extends Array<Pluck> {}
+export interface ObjectPluck
 {
     [key: string]: string | true | ArrayPluck | ObjectPluck;
 }
