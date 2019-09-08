@@ -44,6 +44,8 @@ declare module '@bluecewe/rethink-utilities'
 	}
 	/** Determines whether nest has field. */
 	export function hasNestedField({nest, path}: {nest: Pluck, path: Array<string>}): boolean;
+	/** Gets nest at path within nested fields. */
+	export function getNestedField({pluck, path}: {pluck: Pluck, path: Array<string>}): Pluck | undefined;
 	/** Parses extended insert options, returning them in an ordinary insert options form. */
 	export function extendInsertOptions(options: ParsableOptions): ParsedOptions;
 	export interface ParsableOptions

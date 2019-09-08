@@ -3,17 +3,17 @@
 // To Do: Ensure that path is handled correctly with arrays and objects, namely that nested arrays are considered to share the same depth.
 
 // Types
-import { Pluck, ArrayPluck, ObjectPluck } from './Pluck';
+import { Pluck } from './Pluck';
 
 /** Gets nest at path within nested fields. */
-export function getNestedField({pluck, path}: {pluck: Pluck, path: Array<string>})
+export function getNestedField({pluck, path}: {pluck: Pluck, path: Array<string>}): Pluck | undefined
 {
 	if (path.length === 0)
 	{
 		return undefined;
 	};
 	const pathField = path[0];
-	let nest: ArrayPluck | ObjectPluck;
+	let nest: Pluck;
 	if (Array.isArray(pluck))
 	{
 		for (let field of pluck)
