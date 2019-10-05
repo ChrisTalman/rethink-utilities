@@ -1,11 +1,7 @@
 {
-	"name": "@bluecewe/rethink-utilities",
+	"name": "@ChrisTalman/rethink-utilities",
 	"description": "A collection of RethinkDB utilities.",
 	"version": "2.1.0",
-	"repository": {
-		"type": "git",
-		"url": "https://bitbucket.org/Bluecewe/rethink-utilities.git"
-	},
 	"license": "UNLICENSED",
 	"scripts": {
 		"build": "./node_modules/.bin/webpack"
