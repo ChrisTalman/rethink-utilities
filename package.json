@@ -1,8 +1,7 @@
 {
-	"name": "@ChrisTalman/rethink-utilities",
-	"description": "A collection of RethinkDB utilities.",
-	"version": "2.1.0",
-	"license": "UNLICENSED",
+	"name": "@chris-talman/rethink-utilities",
+	"description": "Some RethinkDB utilities",
+	"version": "2.2.0",
 	"scripts": {
 		"build": "./node_modules/.bin/webpack"
 	},
