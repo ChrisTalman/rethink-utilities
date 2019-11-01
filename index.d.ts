@@ -1,7 +1,9 @@
 /// <types="rethinkdb-ts">
+/// <types="moment">
 
 // Types
 import { RQuery, RDatum, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
+import Moment from 'moment';
 type ReturnType <T> = T extends (...args: any[]) => infer R ? R : any;
 type PromiseValue <T> = T extends Promise<infer V> ? V : never;
 
@@ -27,6 +29,7 @@ declare module '@ChrisTalman/rethink-utilities'
 		constructor(result: MinimalWriteResult);
 	}
 	export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {}
+
 	/** Conducts RethinkDB-style pluck on array of objects. */
 	export function pluck <GenericRows extends PluckRowsVariant> ({rows, pluck}: {rows: GenericRows, pluck: Pluck}): GenericRows;
 	export type PluckRowsVariant = PluckRows | PluckRow;
@@ -42,10 +45,13 @@ declare module '@ChrisTalman/rethink-utilities'
 	{
 		[key: string]: true | PureObjectPluck;
 	}
+
 	/** Determines whether nest has field. */
 	export function hasNestedField({nest, path}: {nest: Pluck, path: Array<string>}): boolean;
+
 	/** Gets nest at path within nested fields. */
 	export function getNestedField({pluck, path}: {pluck: Pluck, path: Array<string>}): Pluck | undefined;
+
 	/** Parses extended insert options, returning them in an ordinary insert options form. */
 	export function extendInsertOptions(options: ParsableOptions): ParsedOptions;
 	export interface ParsableOptions
@@ -61,6 +67,60 @@ declare module '@ChrisTalman/rethink-utilities'
 	{
 		conflict?: 'error' | 'replace' | 'update' | ConflictCallback;
 	}
+
 	/** Generates RethinkDB query which creates a dictionary of keys from the given array using the given ID key, with every value set as boolean true. */
 	export function emptyDictionaryFromArray <GenericArray extends Array<object>, GenericId extends keyof GenericArray[0]> (array: GenericArray, id: GenericId): RDatum;
+
+	/** Insert a document with unique properties with a very low chance of conflicts. */
+	export class InsertUnique
+	{
+		public readonly table: string;
+		constructor({table}: {table: string});
+		/** Insert a document with unique properties with a very low chance of conflicts. */
+		public insert <GenericConflict extends RDatum<boolean>, GenericInsert extends RDatum<WriteResult>>
+		(
+			this: InsertUnique,
+			{
+				conflict: conflictQuery,
+				unique,
+				insert: insertQuery
+			}:
+			{
+				conflict: GenericConflict,
+				unique: InsertUniqueParameters,
+				insert: GenericInsert
+			}
+		): Promise<InsertUniqueResult<GenericInsert>>;
+	}
+	export interface InsertUniqueParameters
+	{
+		type: string;
+		hash: object;
+		lifetime?: Moment.Duration;
+	}
+	export interface InsertUniqueDocument
+	{
+		id: string;
+		type: string;
+		hash: string;
+		count: number;
+		created: number;
+	}
+	export interface InsertUniqueResult <GenericInsert extends RDatum<WriteResult>>
+	{
+		conflict: boolean;
+		unique?: InsertUniqueResultUnique | null;
+		insert?: RDatumValue <GenericInsert> | null;
+		delete?: WriteResult | null;
+	}
+	export interface InsertUniqueResultUnique
+	{
+		result: WriteResult <InsertUniqueDocument>;
+		document?: InsertUniqueDocument;
+	}
+	type RDatumValue <T> = T extends RDatum<infer V> ? V : never;
+	export class InsertUniqueConflictError <GenericInsert extends RDatum<WriteResult>> extends Error
+	{
+		public readonly result: InsertUniqueResult <GenericInsert>;
+	}
 }

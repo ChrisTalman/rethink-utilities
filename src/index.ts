@@ -7,3 +7,4 @@ export { hasNestedField } from 'src/Modules/HasNestedField';
 export { getNestedField } from 'src/Modules/GetNestedField';
 export { default as emptyDictionaryFromArray } from 'src/Modules/EmptyDictionaryFromArray';
 export { default as extendInsertOptions } from 'src/Modules/ExtendInsertOptions';
+export { InsertUnique, InsertUniqueConflictError } from './Modules/InsertUnique';
