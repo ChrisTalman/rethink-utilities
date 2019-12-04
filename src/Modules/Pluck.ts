@@ -5,62 +5,59 @@ export type RowsVariant = Rows | Row;
 export interface Rows extends Array<Row> {};
 export type Row = object;
 export type Pluck = string | ArrayPluck | ObjectPluck;
-export interface ArrayPluck extends Array<Pluck> {}
+export interface ArrayPluck extends Array<Pluck> {};
 export interface ObjectPluck
 {
-    [key: string]: string | true | ArrayPluck | ObjectPluck;
-}
-
-/** Conducts RethinkDB-style pluck on array of objects. */
-export default function({rows, pluck}: {rows: RowsVariant, pluck: Pluck})
-{
-	const rowsList = Array.isArray(rows) ? rows : [rows];
-    const pluckedRows: Rows = [];
-    for (let row of rowsList)
-    {
-        const pluckedRow = {};
-        pluckFields(pluck, row, pluckedRow);
-        pluckedRows.push(pluckedRow);
-    };
-    const output = Array.isArray(rows) ? pluckedRows : pluckedRows[0];
-	return output;
+	[key: string]: string | true | ArrayPluck | ObjectPluck;
 };
 
-function pluckFields(pluck: Pluck, document: object, pluckedDocument: object)
+export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluck: Pluck})
 {
-    const pluckList = Array.isArray(pluck) ? pluck : Object.keys(pluck).map(key => ({[key]: pluck[key]}));
-    for (let field of pluckList)
-    {
-        if (typeof field === 'string' && document.hasOwnProperty(field))
-        {
-            pluckedDocument[field] = document[field];
-        }
-        else if (typeof field === 'object')
-        {
-            const subFieldKeys = Object.keys(field);
-            for (let subFieldKey of subFieldKeys)
-            {
-                if (!document.hasOwnProperty(subFieldKey))
-                {
-                    continue;
-                };
-                const subDocument = document[subFieldKey];
-                const pluckedSubdocument = {};
-                const subField = field[subFieldKey];
-                if (typeof subField === 'boolean')
-                {
-                    pluckedSubdocument[subFieldKey] = document[subFieldKey];
-                }
-                else
-                {
-                    pluckFields(subField, subDocument, pluckedSubdocument);
-                };
-                const somePlucked = Object.keys(pluckedSubdocument).length > 0;
-                if (somePlucked)
-                {
-                    pluckedDocument[subFieldKey] = pluckedSubdocument;
-                };
-            };
-        };
-    };
+	const rows = Array.isArray(rowsRaw) ? rowsRaw : [rowsRaw];
+	let fields: ArrayPluck;
+	if (Array.isArray(pluckRaw))
+	{
+		fields = pluckRaw;
+	}
+	else if (typeof pluckRaw === 'string')
+	{
+		fields = [pluckRaw];
+	}
+	else
+	{
+		fields = Object.keys(pluckRaw).map(key => ({[key]: pluckRaw[key]}));
+	};
+	const results: Array<object> = [];
+	for (let row of rows)
+	{
+		const result: object = {};
+		for (let field of fields)
+		{
+			if (typeof field === 'string')
+			{
+				if (field in row)
+				{
+					result[field] = row[field];
+				};
+			}
+			else if (Array.isArray(field))
+			{
+				for (let subfield of field)
+				{
+					Object.assign(result, pluck({rows: row, pluck: subfield}));
+				};
+			}
+			else
+			{
+				for (let { 0: subfield, 1: subsubfield } of Object.entries(field))
+				{
+					const resolvedPluck = subsubfield === true ? [ subfield ] : subsubfield;
+					result[subfield] = pluck({rows: row[subfield], pluck: resolvedPluck});
+				};
+			};
+		};
+		results.push(result);
+	};
+	const output = Array.isArray(rowsRaw) ? results : results[0];
+	return output;
 };
