@@ -35,13 +35,14 @@ export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluc
 		{
 			if (typeof field === 'string')
 			{
-				if (field in row)
+				if (typeof row === 'object' && row !== null && field in row)
 				{
 					result[field] = row[field];
 				};
 			}
 			else if (Array.isArray(field))
 			{
+				if (row === undefined) continue;
 				for (let subfield of field)
 				{
 					Object.assign(result, pluck({rows: row, pluck: subfield}));
@@ -51,8 +52,15 @@ export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluc
 			{
 				for (let { 0: subfield, 1: subsubfield } of Object.entries(field))
 				{
-					const resolvedPluck = subsubfield === true ? [ subfield ] : subsubfield;
-					result[subfield] = pluck({rows: row[subfield], pluck: resolvedPluck});
+					if (typeof row[subfield] === undefined) continue;
+					if (subsubfield === true)
+					{
+						result[subfield] = row[subfield];
+					}
+					else
+					{
+						result[subfield] = pluck({rows: row[subfield], pluck: subsubfield});
+					};
 				};
 			};
 		};
