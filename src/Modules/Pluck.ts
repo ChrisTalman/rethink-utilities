@@ -30,6 +30,7 @@ export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluc
 	const results: Array<object> = [];
 	for (let row of rows)
 	{
+		if (row === undefined) continue;
 		const result: object = {};
 		for (let field of fields)
 		{
@@ -42,7 +43,6 @@ export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluc
 			}
 			else if (Array.isArray(field))
 			{
-				if (row === undefined) continue;
 				for (let subfield of field)
 				{
 					Object.assign(result, pluck({rows: row, pluck: subfield}));
@@ -52,7 +52,7 @@ export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluc
 			{
 				for (let { 0: subfield, 1: subsubfield } of Object.entries(field))
 				{
-					if (typeof row[subfield] === undefined) continue;
+					if (row[subfield] === undefined) continue;
 					if (subsubfield === true)
 					{
 						result[subfield] = row[subfield];
