@@ -1,7 +1,7 @@
 {
 	"name": "@chris-talman/rethink-utilities",
 	"description": "Some RethinkDB utilities",
-	"version": "2.2.4",
+	"version": "2.2.5",
 	"scripts": {
 		"build": "./node_modules/.bin/webpack"
 	},
@@ -15,6 +15,6 @@
 	},
 	"dependencies": {
 		"moment": "2.24.0",
-		"rethinkdb-ts": ">=2.4.0-rc.16"
+		"rethinkdb-ts": "2.4.0"
 	}
 }
