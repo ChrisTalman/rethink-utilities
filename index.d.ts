@@ -72,55 +72,61 @@ declare module '@chris-talman/rethink-utilities'
 	export function emptyDictionaryFromArray <GenericArray extends Array<object>, GenericId extends keyof GenericArray[0]> (array: GenericArray, id: GenericId): RDatum;
 
 	/** Insert a document with unique properties with a very low chance of conflicts. */
-	export class InsertUnique
+	export class WriteUnique
 	{
 		public readonly table: string;
 		constructor({table}: {table: string});
-		/** Insert a document with unique properties with a very low chance of conflicts. */
-		public insert <GenericConflict extends RDatum<boolean>, GenericInsert extends RDatum<WriteResult>>
+		/**
+			`r.insert()` or `r.update()` a document with unique properties.
+			Uniqueness is evaluated with atomic operations.
+			There is a chance that uniqueness could be violated due to the limitations of atomicity in RethinkDB, but it is low.
+		*/
+		public execute <GenericConflict extends RDatum<boolean | string | null>, GenericWrite extends RDatum<WriteResult>>
 		(
-			this: InsertUnique,
+			this: WriteUnique,
 			{
 				conflict: conflictQuery,
 				unique,
-				insert: insertQuery
+				write: writeQuery
 			}:
 			{
 				conflict: GenericConflict,
-				unique: InsertUniqueParameters,
-				insert: GenericInsert
+				unique: WriteUniqueParameters,
+				write: GenericWrite
 			}
-		): Promise<InsertUniqueResult<GenericInsert>>;
+		): Promise<WriteUniqueResult<GenericWrite>>;
 	}
-	export interface InsertUniqueParameters
+	export interface WriteUniqueParameters
 	{
+		/** Document type. */
 		type: string;
-		hash: object;
+		/** An array of objects of fields, each of which must be unique among other documents. */
+		fields: Array<object>;
 		lifetime?: Moment.Duration;
 	}
-	export interface InsertUniqueDocument
+	export interface WriteUniqueDocument
 	{
-		id: string;
-		type: string;
-		hash: string;
+		/** [document type, hash of array of property path hashes] */
+		id: [string, string];
 		count: number;
+		/** Unix timestamp. */
 		created: number;
 	}
-	export interface InsertUniqueResult <GenericInsert extends RDatum<WriteResult>>
+	export interface WriteUniqueResult <GenericWrite extends RDatum<WriteResult>>
 	{
-		conflict: boolean;
-		unique?: InsertUniqueResultUnique | null;
-		insert?: RDatumValue <GenericInsert> | null;
-		delete?: WriteResult | null;
+		conflict: Array<boolean | string | null>;
+		unique: WriteUniqueResultUnique | null;
+		insert: RDatumValue <GenericWrite> | null;
+		delete: WriteResult | null;
 	}
-	export interface InsertUniqueResultUnique
+	export interface WriteUniqueResultUnique
 	{
-		result: WriteResult <InsertUniqueDocument>;
-		document?: InsertUniqueDocument;
+		result: WriteResult <WriteUniqueDocument>;
+		documents: Array<WriteUniqueDocument>;
 	}
 	type RDatumValue <T> = T extends RDatum<infer V> ? V : never;
-	export class InsertUniqueConflictError <GenericInsert extends RDatum<WriteResult>> extends Error
+	export class WriteUniqueConflictError <GenericWrite extends RDatum<WriteResult>> extends Error
 	{
-		public readonly result: InsertUniqueResult <GenericInsert>;
+		public readonly result: WriteUniqueResult <GenericWrite>;
 	}
 }
