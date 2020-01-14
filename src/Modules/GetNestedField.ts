@@ -13,7 +13,7 @@ export function getNestedField({pluck, path}: {pluck: Pluck, path: Array<string>
 		return undefined;
 	};
 	const pathField = path[0];
-	let nest: Pluck;
+	let nest: Pluck | undefined;
 	if (Array.isArray(pluck))
 	{
 		for (let field of pluck)

@@ -34,9 +34,9 @@ const TRANSIENT_ERROR_NAMES =
 /** Runs query and returns result if successful, otherwise reattempts several times until throwing an exception with the final error. */
 export default async function <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: Options})
 {
-	let result: PromiseValue<ReturnType<GenericQuery['run']>>;
+	let result: PromiseValue<ReturnType<GenericQuery['run']>> | undefined;
 	let success = false;
-	let lastError: Error;
+	let lastError: Error | undefined;
 	for (let attemptIndex = 0; attemptIndex < MAX_ATTEMPTS; attemptIndex++)
 	{
 		try
@@ -55,7 +55,18 @@ export default async function <GenericQuery extends RQuery> ({query, options}: {
 		success = true;
 		break;
 	};
-	if (!success) throw lastError;
+	if (!success)
+	{
+		if (lastError === undefined)
+		{
+			throw new Error('Last error undefined');
+		};
+		throw lastError;
+	};
+	if (result === undefined)
+	{
+		throw new Error('Result undefined');
+	};
 	if (options.throwRuntime) throwReqlRuntimeWriteError(result);
 	return result;
 };
