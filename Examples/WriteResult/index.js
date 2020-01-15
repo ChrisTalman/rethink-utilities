@@ -53,14 +53,19 @@ async function executeWriteUser(document, writeUnique)
 
 async function writeUser(document, writeUnique)
 {
-	await writeUnique.update
+	await writeUnique.execute
 	(
 		{
 			conflict:
 			[
 				RethinkDB
 					.table(USERS_TABLE_NAME)
-					.filter(document)
+					.filter({username: document.username})
+					.count()
+					.gt(0),
+				RethinkDB
+					.table(USERS_TABLE_NAME)
+					.filter({email: document.email})
 					.count()
 					.gt(0)
 			],
