@@ -58,7 +58,7 @@ const DELETE_FIELD_NAME = 'delete';
 const HASH_ALGORITHM = 'sha384';
 const HASH_ENCODING = 'base64';
 
-export async function execute <GenericConflict extends RDatum<boolean | string | null>, GenericWrite extends RDatum<WriteResult>>
+export async function execute <GenericConflict extends RDatum<boolean> | RDatum<string> | RDatum<null>, GenericWrite extends RDatum<WriteResult>>
 (
 	this: WriteUnique,
 	{
