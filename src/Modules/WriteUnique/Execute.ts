@@ -238,33 +238,22 @@ function generateUniqueQueries({type: documentType, fields: fieldGroups, lifetim
 function generateUniqueQuery({documentType, fieldGroup, lifetime, instance}: {documentType: string, fieldGroup: object, lifetime: UniqueParameters['lifetime'], instance: WriteUnique})
 {
 	const paths = generatePropertyPaths(fieldGroup);
-	const fieldGroupFieldHashes: Array<[string, string]> = [];
+	const fieldGroupFields: Array<[string, string]> = [];
 	for (let path of paths)
 	{
-		let valueHashable: string;
 		if (typeof path.value === 'object' && path.value !== null)
 		{
 			if (Array.isArray(path.value))
 			{
 				throw new WriteUniqueGeneralError(`Field value cannot be array: ${path.path}`);
 			};
-			valueHashable = JSON.stringify(path.value);
-		}
-		else if (typeof path.value === 'boolean' || typeof path.value === 'number' || path.value === null)
-		{
-			valueHashable = path.value.toString();
-		}
-		else
-		{
-			valueHashable = path.value;
 		};
-		const pathHash = generateHash({value: path.path, algorithm: HASH_ALGORITHM, encoding: HASH_ENCODING});
-		const valueHash = generateHash({value: valueHashable, algorithm: HASH_ALGORITHM, encoding: HASH_ENCODING});
-		fieldGroupFieldHashes.push([pathHash, valueHash]);
+		fieldGroupFields.push([path.path, path.value]);
 	};
-	const fieldGroupFieldHashesHash = generateHash({value: JSON.stringify(fieldGroupFieldHashes), algorithm: HASH_ALGORITHM, encoding: HASH_ENCODING});
+	const fieldGroupFieldsString = JSON.stringify(fieldGroupFields);
+	const fieldGroupFieldsHash = generateHash({value: fieldGroupFieldsString, algorithm: HASH_ALGORITHM, encoding: HASH_ENCODING});
 	const lifetimeMilliseconds = lifetime ? lifetime.asMilliseconds() : DEFAULT_LIFETIME_MILLISECONDS;
-	const id: Unique['id'] = [documentType, fieldGroupFieldHashesHash];
+	const id: Unique['id'] = [documentType, fieldGroupFieldsHash];
 	const query = RethinkDB
 		.table(instance.table, {readMode: 'majority'})
 		.get(id)
