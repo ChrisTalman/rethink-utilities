@@ -81,7 +81,7 @@ declare module '@chris-talman/rethink-utilities'
 			Uniqueness is evaluated with atomic operations.
 			There is a chance that uniqueness could be violated due to the limitations of atomicity in RethinkDB, but it is low.
 		*/
-		public execute <GenericConflict extends RDatum<boolean> | RDatum<string> | RDatum<null>, GenericWrite extends RDatum<WriteResult>>
+		public execute <GenericConflict extends Array<RDatum<boolean> | RDatum<string> | RDatum<null>>, GenericWrite extends RDatum<WriteResult>>
 		(
 			this: WriteUnique,
 			{
