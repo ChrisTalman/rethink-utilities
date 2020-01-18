@@ -32,7 +32,7 @@ export interface Result <GenericWrite extends RDatum<WriteResult>>
 {
 	conflict: Array<boolean | string | null>;
 	unique: ResultUnique | null;
-	insert: RDatumValue <GenericWrite> | null;
+	write: RDatumValue <GenericWrite> | null;
 	delete: WriteResult | null;
 };
 export interface ResultUnique

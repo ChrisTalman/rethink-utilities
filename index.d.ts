@@ -124,7 +124,7 @@ declare module '@chris-talman/rethink-utilities'
 	{
 		conflict: Array<boolean | string | null>;
 		unique: WriteUniqueResultUnique | null;
-		insert: RDatumValue <GenericWrite> | null;
+		write: RDatumValue <GenericWrite> | null;
 		delete: WriteResult | null;
 	}
 	export interface WriteUniqueResultUnique
