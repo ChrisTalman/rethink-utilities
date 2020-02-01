@@ -11,61 +11,76 @@ export interface ObjectPluck
 	[key: string]: string | true | ArrayPluck | ObjectPluck;
 };
 
-export function pluck({rows: rowsRaw, pluck: pluckRaw}: {rows: RowsVariant, pluck: Pluck})
+export function pluck(parameters: {rows: RowsVariant} & ({pluck: Pluck} | {plucks: Array<Pluck>}))
 {
-	const rows = Array.isArray(rowsRaw) ? rowsRaw : [rowsRaw];
-	let fields: ArrayPluck;
-	if (Array.isArray(pluckRaw))
+	const { rows: rowsRaw } = parameters;
+	if ('pluck' in parameters)
 	{
-		fields = pluckRaw;
-	}
-	else if (typeof pluckRaw === 'string')
-	{
-		fields = [pluckRaw];
-	}
-	else
-	{
-		fields = Object.keys(pluckRaw).map(key => ({[key]: pluckRaw[key]}));
-	};
-	const results: Array<object> = [];
-	for (let row of rows)
-	{
-		if (row === undefined) continue;
-		const result: object = {};
-		for (let field of fields)
+		const { pluck: pluckRaw } = parameters;
+		const rows = Array.isArray(rowsRaw) ? rowsRaw : [rowsRaw];
+		let fields: ArrayPluck;
+		if (Array.isArray(pluckRaw))
 		{
-			if (typeof field === 'string')
+			fields = pluckRaw;
+		}
+		else if (typeof pluckRaw === 'string')
+		{
+			fields = [pluckRaw];
+		}
+		else
+		{
+			fields = Object.keys(pluckRaw).map(key => ({[key]: pluckRaw[key]}));
+		};
+		const results: Array<object> = [];
+		for (let row of rows)
+		{
+			if (row === undefined) continue;
+			const result: object = {};
+			for (let field of fields)
 			{
-				if (typeof row === 'object' && row !== null && field in row)
+				if (typeof field === 'string')
 				{
-					result[field] = row[field];
-				};
-			}
-			else if (Array.isArray(field))
-			{
-				for (let subfield of field)
-				{
-					Object.assign(result, pluck({rows: row, pluck: subfield}));
-				};
-			}
-			else
-			{
-				for (let { 0: subfield, 1: subsubfield } of Object.entries(field))
-				{
-					if (row[subfield] === undefined) continue;
-					if (subsubfield === true)
+					if (typeof row === 'object' && row !== null && field in row)
 					{
-						result[subfield] = row[subfield];
-					}
-					else
+						result[field] = row[field];
+					};
+				}
+				else if (Array.isArray(field))
+				{
+					for (let subfield of field)
 					{
-						result[subfield] = pluck({rows: row[subfield], pluck: subsubfield});
+						Object.assign(result, pluck({rows: row, pluck: subfield}));
+					};
+				}
+				else
+				{
+					for (let { 0: subfield, 1: subsubfield } of Object.entries(field))
+					{
+						if (row[subfield] === undefined) continue;
+						if (subsubfield === true)
+						{
+							result[subfield] = row[subfield];
+						}
+						else
+						{
+							result[subfield] = pluck({rows: row[subfield], pluck: subsubfield});
+						};
 					};
 				};
 			};
+			results.push(result);
 		};
-		results.push(result);
+		const output = Array.isArray(rowsRaw) ? results : results[0];
+		return output;
+	}
+	else
+	{
+		const { plucks } = parameters;
+		let output = rowsRaw;
+		for (let currentPluck of plucks)
+		{
+			output = pluck({rows: output, pluck: currentPluck});
+		};
+		return output;
 	};
-	const output = Array.isArray(rowsRaw) ? results : results[0];
-	return output;
 };

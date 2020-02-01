@@ -31,7 +31,7 @@ declare module '@chris-talman/rethink-utilities'
 	export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {}
 
 	/** Conducts RethinkDB-style pluck on array of objects. */
-	export function pluck <GenericRows extends PluckRowsVariant> ({rows, pluck}: {rows: GenericRows, pluck: Pluck}): GenericRows;
+	export function pluck <GenericRows extends PluckRowsVariant> (parameters: {rows: GenericRows} & ({pluck: Pluck} | {plucks: Array<Pluck>})): GenericRows;
 	export type PluckRowsVariant = PluckRows | PluckRow;
 	export interface PluckRows extends Array<PluckRow> {}
 	export type PluckRow = object;
