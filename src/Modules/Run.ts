@@ -1,7 +1,7 @@
 'use strict';
 
-// Interal Modules
-import delay from 'src/Modules/Utilities/Delay';
+// External Modules
+import { delay } from '@chris-talman/isomorphic-utilities';
 
 // Types
 import { RQuery, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
@@ -32,7 +32,7 @@ const TRANSIENT_ERROR_NAMES =
 ];
 
 /** Runs query and returns result if successful, otherwise reattempts several times until throwing an exception with the final error. */
-export default async function <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: Options})
+export async function run <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: Options})
 {
 	let result: PromiseValue<ReturnType<GenericQuery['run']>> | undefined;
 	let success = false;

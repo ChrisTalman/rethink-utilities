@@ -1,10 +1,11 @@
 'use strict';
 
 // Methods
-export { default as run, ReqlRuntimeWriteError, MinimalWriteResult } from 'src/Modules/Run';
+export { run, ReqlRuntimeWriteError, MinimalWriteResult } from 'src/Modules/Run';
+export { resolveFirstChange } from 'src/Modules/ResolveFirstChange';
 export { pluck } from 'src/Modules/Pluck';
 export { hasNestedField } from 'src/Modules/HasNestedField';
 export { getNestedField } from 'src/Modules/GetNestedField';
-export { default as emptyDictionaryFromArray } from 'src/Modules/EmptyDictionaryFromArray';
-export { default as extendInsertOptions } from 'src/Modules/ExtendInsertOptions';
+export { emptyDictionaryFromArray } from 'src/Modules/EmptyDictionaryFromArray';
+export { extendInsertOptions } from 'src/Modules/ExtendInsertOptions';
 export { WriteUnique, WriteUniqueConflictError } from './Modules/WriteUnique';

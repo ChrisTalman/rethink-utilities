@@ -30,6 +30,9 @@ declare module '@chris-talman/rethink-utilities'
 	}
 	export interface MinimalWriteResult extends Required<Pick<WriteResult, 'errors' | 'first_error'>> {}
 
+	/** Returns `new_val`, if truthy, of first change in `WriteResult`, otherwise throws error with full log of result object. */
+	export function resolveFirstChange <GenericChange extends any> (result: WriteResult <GenericChange> | null): GenericChange;
+
 	/** Conducts RethinkDB-style pluck on array of objects. */
 	export function pluck <GenericRows extends PluckRowsVariant> (parameters: {rows: GenericRows} & ({pluck: Pluck} | {plucks: Array<Pluck>})): GenericRows;
 	export type PluckRowsVariant = PluckRows | PluckRow;

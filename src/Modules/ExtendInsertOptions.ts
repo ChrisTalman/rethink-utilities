@@ -16,7 +16,7 @@ export interface ParsedOptions
 };
 
 /** Parses extended insert options, returning them in an ordinary insert options form. */
-export default function parse(options: ParsableOptions)
+export function extendInsertOptions(options: ParsableOptions)
 {
 	if ('conflict' in options && typeof options.conflict === 'object' && options.conflict !== null && 'withoutOld' in options.conflict)
 	{
