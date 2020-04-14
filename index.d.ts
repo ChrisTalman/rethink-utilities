@@ -1,16 +1,11 @@
-/// <types="rethinkdb-ts">
-/// <types="moment">
-
-// Types
-import { RQuery, RDatum, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
-import Moment from 'moment';
-type ReturnType <T> = T extends (...args: any[]) => infer R ? R : any;
-type PromiseValue <T> = T extends Promise<infer V> ? V : never;
-
 declare module '@chris-talman/rethink-utilities'
 {
+	// Types
+	import { RQuery, RDatum, Connection, RunOptions, WriteResult } from 'rethinkdb-ts';
+	import Moment from 'moment';
+
 	/** Runs query and returns result if successful, otherwise reattempts several times until throwing an exception with the final error. */
-	export function run <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: RunUtilityOptions}): PromiseValue<ReturnType<GenericQuery['run']>>;
+	export function run <GenericQuery extends RQuery> ({query, options}: {query: GenericQuery, options: RunUtilityOptions}): Promise<ReturnType<GenericQuery['run']>>;
 	export interface RunUtilityOptions
 	{
 		/**
