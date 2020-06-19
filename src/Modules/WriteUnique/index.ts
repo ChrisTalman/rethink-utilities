@@ -4,7 +4,7 @@
 import Moment from 'moment';
 
 // Internal Modules
-import { execute } from './Execute';
+import { execute, handleExecuteError, generateExecuteQuery } from './Execute';
 
 // Types
 import { WriteResult, RDatum } from 'rethinkdb-ts';
@@ -23,6 +23,8 @@ export class WriteUnique
 		this.table = table;
 	};
 	public execute = execute;
+	public handleExecuteError = handleExecuteError;
+	public generateExecuteQuery = generateExecuteQuery;
 };
 
 export class WriteUniqueConflictError <GenericWrite extends RDatum<WriteResult>> extends Error

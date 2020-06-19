@@ -73,7 +73,59 @@ export async function execute <GenericConflict extends Array<RDatum<boolean> | R
 	}
 )
 {
-	const uniqueParameters = Object.assign({}, unique, {instance: this});
+	const query = generateQuery({conflictQuery, unique, writeQuery, writeUnique: this});
+	const result = await run({query, options: {throwRuntime: true}});
+	handleExecuteError(result);
+	return result;
+};
+
+/** Evaluates write result and throws `WriteUniqueConflictError` if an error is detected. */
+export function handleExecuteError <GenericWrite extends RDatum<WriteResult>> (result: Result <GenericWrite>)
+{
+	const conflicted = result.conflict.some(conflict => conflict === true || typeof conflict === 'string') || (result.unique === null || result.unique.documents.some(document => document.count > 1));
+	if (conflicted)
+	{
+		throw new WriteUniqueConflictError({result});
+	};
+};
+
+/** Generates query used in `execute()`. */
+export function generateExecuteQuery <GenericConflict extends Array<RDatum<boolean> | RDatum<string> | RDatum<null>>, GenericWrite extends RDatum<WriteResult>>
+(
+	this: WriteUnique,
+	{
+		conflict: conflictQuery,
+		unique,
+		write: writeQuery
+	}:
+	{
+		conflict: GenericConflict,
+		unique: UniqueParameters,
+		write: GenericWrite
+	}
+)
+{
+	const query = generateQuery({conflictQuery, unique, writeQuery, writeUnique: this});
+	return query;
+};
+
+function generateQuery <GenericConflict extends Array<RDatum<boolean> | RDatum<string> | RDatum<null>>, GenericWrite extends RDatum<WriteResult>>
+(
+	{
+		conflictQuery,
+		unique,
+		writeQuery,
+		writeUnique
+	}:
+	{
+		conflictQuery: GenericConflict,
+		unique: UniqueParameters,
+		writeQuery: GenericWrite,
+		writeUnique: WriteUnique
+	}
+)
+{
+	const uniqueParameters = Object.assign({}, unique, {instance: writeUnique});
 	const query = RethinkDB
 		.expr({conflict: conflictQuery})
 		.merge
@@ -197,7 +249,7 @@ export async function execute <GenericConflict extends Array<RDatum<boolean> | R
 				}
 			)
 		)
-		.merge
+		.merge <Result <GenericWrite>>
 		(
 			(result: RDatum) =>
 			(
@@ -214,13 +266,7 @@ export async function execute <GenericConflict extends Array<RDatum<boolean> | R
 				}
 			)
 		);
-	const result: Result <GenericWrite> = await run({query, options: {throwRuntime: true}});
-	const conflicted = result.conflict.some(conflict => conflict === true || typeof conflict === 'string') || (result.unique === null || result.unique.documents.some(document => document.count > 1));
-	if (conflicted)
-	{
-		throw new WriteUniqueConflictError({result});
-	};
-	return result;
+	return query;
 };
 
 function generateUniqueQueries({type: documentType, fields: fieldGroups, lifetime, instance}: UniqueParameters & {instance: WriteUnique})
