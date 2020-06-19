@@ -259,7 +259,7 @@ function generateQuery <GenericConflict extends Array<RDatum<boolean> | RDatum<s
 						result(WRITE_FIELD_NAME).eq(null),
 						null,
 						RethinkDB
-							.table(this.table)
+							.table(writeUnique.table)
 							.getAll(RethinkDB.args(result(UNIQUE_FIELD_NAME)(UNIQUE_DOCUMENTS_FIELD_NAME)('id') as any))
 							.delete()
 					)
