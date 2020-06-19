@@ -88,22 +88,20 @@ declare module '@chris-talman/rethink-utilities'
 			>,
 			GenericWrite extends RDatum<WriteResult>
 		>
-		(
-			{
-				conflict: conflictQuery,
-				unique,
-				write: writeQuery
-			}:
-			{
-				conflict: GenericConflict,
-				unique: WriteUniqueParameters,
-				write: GenericWrite
-			}
-		): Promise <WriteUniqueResult <GenericWrite>>;
+		(parameters: {conflict: GenericConflict, unique: WriteUniqueParameters, write: GenericWrite}): Promise <WriteUniqueResult <GenericWrite>>;
 		/** Evaluates write result and throws `WriteUniqueConflictError` if an error is detected. */
 		public handleExecuteError <GenericWrite extends RDatum <WriteResult>> (result: WriteUniqueResult <GenericWrite>): void;
 		/** Generates query used in `execute()`. */
-		public generateExecuteQuery <GenericWrite extends RDatum <WriteResult>> (parameters: this['execute']): RDatum <WriteUniqueResult <GenericWrite>>;
+		public generateExecuteQuery
+		<
+			GenericConflict extends Array<
+				RDatum<boolean> | RDatum<boolean | string> | RDatum<boolean | string | null> |
+				RDatum<string> | RDatum<string | null> |
+				RDatum<null>
+			>,
+			GenericWrite extends RDatum<WriteResult>
+		>
+		(parameters: {conflict: GenericConflict, unique: WriteUniqueParameters, write: GenericWrite}): RDatum <WriteUniqueResult <GenericWrite>>;
 	}
 	export interface WriteUniqueParameters
 	{
